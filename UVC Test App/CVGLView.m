@@ -86,6 +86,7 @@
 
 
 - (void) drawRect:(NSRect)r	{
+    cachedBounds = r;
 	OSSpinLockLock(&renderLock);
 	if (!initialized)	{
 		NSOpenGLContext			*sharedCtx = [appDelegate sharedContext];
@@ -126,7 +127,8 @@
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	
 	//	set up the view to draw
-	NSRect				bounds = [self bounds];
+//    NSRect                bounds = [self bounds];
+    NSRect                bounds = cachedBounds;
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glMatrixMode(GL_PROJECTION);

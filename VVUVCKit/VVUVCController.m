@@ -339,8 +339,15 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 - (id) initWithDeviceIDString:(NSString *)n	{
 	//NSLog(@"%s ... %@",__func__,n);
 	if (n != nil)	{
-		unsigned int locationID = 0;
-		sscanf([n UTF8String], "0x%8x",&locationID);
+        unsigned long long locationIdLong = 0;
+        NSScanner *scanner = [[NSScanner alloc] initWithString:n];
+        BOOL status = [scanner scanHexLongLong:&locationIdLong];
+        
+        if (!status) {
+            return nil;
+        }
+        
+		unsigned int locationID = (unsigned int)(locationIdLong >> 32);
 		if (locationID) return [self initWithLocationID:locationID];
 	}
 	[self release];
@@ -364,8 +371,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		BusProber		*prober = [[BusProber alloc] init];
 		NSMutableArray	*devices = [prober devicesArray];
 		for (BusProbeDevice *devicePtr in devices)	{
+//            NSLog(@"\t\tfound device %@ vend: 0x%08x, prod: 0x%08x, locationID: 0x%08x",[devicePtr deviceName], (unsigned int)[devicePtr vendorID], [devicePtr productID], [devicePtr locationID]);
 			if ([devicePtr locationID] == locationID)	{
-				//NSLog(@"\t\tfound device %@",[devicePtr deviceName]);
 				NSDictionary		*tmpDict = [devicePtr dictionaryVersionOfMe];
 				//NSLog(@"\t\ttop-level keys are %@",[tmpDict allKeys]);
 				//NSLog(@"\t\tdevice dict is %@",tmpDict);

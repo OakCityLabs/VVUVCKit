@@ -8,6 +8,7 @@
 	IBOutlet id		appDelegate;
 	OSSpinLock		renderLock;
 	BOOL			initialized;
+    NSRect          cachedBounds;
 }
 
 + (NSRect) rectThatFitsRect:(NSRect)a inRect:(NSRect)b;
